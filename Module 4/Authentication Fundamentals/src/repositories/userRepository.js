@@ -1,4 +1,4 @@
-const prisma = require('../db/prisma');
+﻿const prisma = require('../db/prisma');
 
 async function findByEmail(email) {
   return prisma.user.findUnique({
@@ -12,7 +12,19 @@ async function createUser({ name, email, passwordHash }) {
   });
 }
 
+async function findPublicById(id) {
+  return prisma.user.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+    },
+  });
+}
+
 module.exports = {
   findByEmail,
   createUser,
+  findPublicById,
 };

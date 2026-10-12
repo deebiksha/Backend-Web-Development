@@ -1,4 +1,4 @@
-const bcrypt = require('bcryptjs');
+﻿const bcrypt = require('bcryptjs');
 const users = require('../repositories/userRepository');
 
 const COST_FACTOR = Math.min(
@@ -128,7 +128,12 @@ async function login(body) {
   return safeUser(user);
 }
 
+async function findPublicById(id) {
+  return users.findPublicById(id);
+}
+
 module.exports = {
   register,
   login,
+  findPublicById,
 };
