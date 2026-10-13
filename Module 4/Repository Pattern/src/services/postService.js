@@ -1,43 +1,37 @@
-const postStore = require('../data/postStore');
+const postRepository = require('../repositories/postRepository');
 
-function listPosts() {
-  return postStore.posts;
+async function listPosts() {
+  return postRepository.findAll();
 }
 
-function getPost(id) {
-  return postStore.posts.find((post) => post.id === Number(id)) || null;
+async function getPost(id) {
+  return postRepository.findById(id);
 }
 
-function createPost(fields) {
+async function createPost(fields) {
   if (!fields || !fields.title) {
     const error = new Error('Title is required');
     error.statusCode = 422;
     throw error;
   }
 
-  const post = {
-    id: postStore.nextId(),
+  return postRepository.create({
     title: fields.title,
     body: fields.body || '',
     authorId: fields.authorId,
-  };
-  postStore.posts.push(post);
-  return post;
+  });
 }
 
-function updatePost(id, patch) {
-  const post = getPost(id);
-  if (!post) return null;
-  if (patch.title !== undefined) post.title = patch.title;
-  if (patch.body !== undefined) post.body = patch.body;
-  return post;
+async function updatePost(id, patch) {
+  const changes = {};
+  if (patch.title !== undefined) changes.title = patch.title;
+  if (patch.body !== undefined) changes.body = patch.body;
+
+  return postRepository.update(id, changes);
 }
 
-function removePost(id) {
-  const index = postStore.posts.findIndex((post) => post.id === Number(id));
-  if (index === -1) return false;
-  postStore.posts.splice(index, 1);
-  return true;
+async function removePost(id) {
+  return postRepository.remove(id);
 }
 
 module.exports = { listPosts, getPost, createPost, updatePost, removePost };

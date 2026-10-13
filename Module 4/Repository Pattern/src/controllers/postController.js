@@ -1,32 +1,32 @@
 const postService = require('../services/postService');
 
-function list(req, res) {
-  return res.json({ data: postService.listPosts() });
+async function list(req, res) {
+  return res.json({ data: await postService.listPosts() });
 }
 
-function get(req, res) {
-  const post = postService.getPost(req.params.id);
+async function get(req, res) {
+  const post = await postService.getPost(req.params.id);
   if (!post) return res.status(404).json({ error: 'Post not found' });
   return res.json({ data: post });
 }
 
-function create(req, res) {
+async function create(req, res) {
   try {
-    const post = postService.createPost(req.body);
+    const post = await postService.createPost(req.body);
     return res.status(201).json({ data: post });
   } catch (error) {
     return res.status(error.statusCode || 500).json({ error: error.message });
   }
 }
 
-function update(req, res) {
-  const post = postService.updatePost(req.params.id, req.body);
+async function update(req, res) {
+  const post = await postService.updatePost(req.params.id, req.body);
   if (!post) return res.status(404).json({ error: 'Post not found' });
   return res.json({ data: post });
 }
 
-function remove(req, res) {
-  const removed = postService.removePost(req.params.id);
+async function remove(req, res) {
+  const removed = await postService.removePost(req.params.id);
   if (!removed) return res.status(404).json({ error: 'Post not found' });
   return res.status(204).send();
 }
