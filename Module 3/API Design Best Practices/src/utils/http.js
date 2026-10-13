@@ -1,17 +1,22 @@
-function sendList(res, rows) {
-  return res.status(200).json(rows);
+function sendList(res, data, meta) {
+  return res.status(200).json({ data, meta });
 }
 
-function sendCreated(res, post) {
-  return res.status(200).json({ post });
+function sendOk(res, data) {
+  return res.status(200).json({ data });
 }
 
-function sendOk(res, payload) {
-  return res.status(200).json(payload);
+function sendCreated(res, data) {
+  return res.status(201).json({ data });
 }
 
 function sendError(res, status, payload) {
-  return res.status(status).json(payload);
+  return res.status(status).json({
+    error: {
+      message: payload.message || 'Request failed',
+      code: payload.code || 'INTERNAL_ERROR'
+    }
+  });
 }
 
 module.exports = {
